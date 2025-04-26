@@ -1,0 +1,18 @@
+[Unit]
+Description=Run Google OAuth Token Refresh Periodically
+Requires=google-oauth-refresh.service
+
+[Timer]
+# Run every 6 hours
+OnUnitActiveSec=6h
+# Also run 15 minutes after boot
+OnBootSec=15min
+# Randomize start time within 30 minutes to avoid hitting API rate limits
+RandomizedDelaySec=1800
+# Ensure timer accuracy within 1 minute
+AccuracySec=1m
+# Keep the unit persistently active across boots
+Persistent=true
+
+[Install]
+WantedBy=timers.target

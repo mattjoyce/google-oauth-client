@@ -1,0 +1,24 @@
+[Unit]
+Description=Google OAuth Token Refresh Service
+After=network.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/path/to/google-oauth-client
+ExecStart=/usr/bin/python3 /path/to/google-oauth-client/refresh_google_token.py
+User=YOUR_USERNAME
+Group=YOUR_USERNAME
+Environment=PATH=/usr/bin:/usr/local/bin
+EnvironmentFile=/path/to/google-oauth-client/.env
+
+# Security hardening
+PrivateTmp=true
+ProtectSystem=full
+NoNewPrivileges=true
+ProtectHome=read-only
+ProtectControlGroups=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+
+[Install]
+WantedBy=multi-user.target
