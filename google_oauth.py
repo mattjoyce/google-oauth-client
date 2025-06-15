@@ -5,6 +5,7 @@ import logging
 import requests
 import secrets
 import json
+import urllib.parse
 from fastapi import FastAPI, Request, Query, HTTPException, status
 from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
@@ -34,7 +35,8 @@ logging.basicConfig(
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI")
-GOOGLE_SCOPES = os.getenv("GOOGLE_SCOPES", "https://www.googleapis.com/auth/userinfo.email")
+GOOGLE_SCOPES_RAW = os.getenv("GOOGLE_SCOPES", "https://www.googleapis.com/auth/userinfo.email")
+GOOGLE_SCOPES = GOOGLE_SCOPES_RAW.strip()
 
 # Validate required environment variables
 required_vars = {
@@ -475,7 +477,7 @@ async def start_oauth(request: Request):
         }
         
         # Convert params to URL query string
-        query_string = "&".join(f"{key}={value}" for key, value in params.items())
+        query_string = urllib.parse.urlencode(params)
         authorization_url = f"{auth_url}?{query_string}"
         
         return {"authorization_url": authorization_url, "state": state}
